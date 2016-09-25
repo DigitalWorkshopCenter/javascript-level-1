@@ -5,7 +5,7 @@
 Welcome to JavaScript Level 1 with the Digital Workshop Center. Please start by completing the [Setup Instructions](SETUP.md).
 
 ## JavaScript Resources
-- [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - JavaScript reference
+- [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference) - _JavaScript reference_
 - [A Smarter Way To Learn](http://www.asmarterwaytolearn.com/js/index-of-exercises.html) - _repetition exercises_
 - [Eloquent JavaScript](http://eloquentjavascript.net/) - _online JavaScript book_
 
