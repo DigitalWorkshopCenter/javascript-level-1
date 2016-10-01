@@ -14,6 +14,16 @@ var productList = [
     name: "Jersey",
     price: 55
   },
+  {
+    id: 4,
+    name: "Trek Mountain Bike",
+    price: 2500
+  },
+  {
+    id: 5,
+    name: "Cannondale Road Bike",
+    price: 6500
+  }
 ];
 
 
