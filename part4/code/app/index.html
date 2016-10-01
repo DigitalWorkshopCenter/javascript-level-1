@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <section class="hero is-primary is-small is-bold">
+      <!-- Hero header: will stick at the top -->
+      <div class="hero-head">
+        <header class="nav">
+          <div class="container">
+            <div class="nav-left">
+              <a class="nav-item">
+                <p class="title is-3">Yay Bikes!</p>
+              </a>
+            </div>
+            <div class="nav-right nav-menu">
+              <a class="nav-item">
+                <span class="icon">
+                  <i class="fa fa-instagram"></i>
+                </span>
+              </a>
+                <a class="nav-item">
+                  <span class="icon">
+                    <i class="fa fa-facebook"></i>
+                  </span>
+                </a>
+                  <a class="nav-item">
+                    <span class="icon">
+                      <i class="fa fa-twitter"></i>
+                    </span>
+                  </a>
+              <span class="nav-item">
+                <a class="button is-primary is-inverted">
+                  <span class="icon">
+                    <i class="fa fa-phone"></i>
+                  </span>
+                  <span>1-800 234 5678</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <!-- Hero content: will be in the middle -->
+      <div class="hero-body">
+        <div class="container">
+          <nav class="level">
+            <div class="level-item has-text-centered">
+              <p class="heading">Budget</p>
+              <p id="budget" class="title">$5,000</p>
+            </div>
+            <div class="level-item has-text-centered">
+              <p class="heading">Inventory</p>
+              <p class="title">EMPTY</p>
+            </div>
+            <div class="level-item has-text-centered">
+              <p class="heading">Profit</p>
+              <p class="title">$0</p>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="box">
+            <p class="title is-3">Catalog</p>
+            <p class="subtitle is-5">Buy products for your store.</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable">
+                <tr>
+                  <td>Gloves</td>
+                  <td>$25</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-shopping-cart"></i>
+                      </span>
+                      <span>Buy</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Jersey</td>
+                  <td>$55</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-shopping-cart"></i>
+                      </span>
+                      <span>Buy</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shorts</td>
+                  <td>$75</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-shopping-cart"></i>
+                      </span>
+                      <span>Buy</span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="title is-3">Inventory</p>
+            <p class="subtitle is-5">Sell products to your customers.</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Inventory</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Gloves</td>
+                  <td>3</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-check"></i>
+                      </span>
+                      <span>Sell</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Jersey</td>
+                  <td>5</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-check"></i>
+                      </span>
+                      <span>Sell</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shorts</td>
+                  <td>2</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-small">
+                      <span class="icon">
+                        <i class="fa fa-check"></i>
+                      </span>
+                      <span>Sell</span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box">
+            <p class="title is-3">Sales</p>
+            <p class="subtitle is-5">Previous sales made to your customers.</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Sold For</th>
+                  <th>Profit</th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Gloves</td>
+                  <td>$45</td>
+                  <td>$20</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-outlined is-small">
+                      <span class="icon">
+                        <i class="fa fa-undo"></i>
+                      </span>
+                      <span>Refund</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Jersey</td>
+                  <td>$45</td>
+                  <td>$20</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-outlined is-small">
+                      <span class="icon">
+                        <i class="fa fa-undo"></i>
+                      </span>
+                      <span>Refund</span>
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Shorts</td>
+                  <td>$45</td>
+                  <td>$20</td>
+                  <td class="is-icon">
+                    <a class="button is-primary is-outlined is-small">
+                      <span class="icon">
+                        <i class="fa fa-undo"></i>
+                      </span>
+                      <span>Refund</span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="footer">
+      <div class="container">
+        <div class="content has-text-centered">
+          <p>
+            <strong>Yay Bikes</strong> is a JavaScript experiment by <a href="http://digitalworkshopcenter.com/">The Digital Workshop Center</a>.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <script src="bundle.js"></script>
+  </body>
+</html>
