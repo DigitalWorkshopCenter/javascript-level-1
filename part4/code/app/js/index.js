@@ -6,10 +6,16 @@ var Supplier = require('./supplier');
 /**
  * Utility function for creating DOM elements.
  */
-var tag = function(tagName, classNames) {
+var tag = function(tagName, options = {}) {
   var element = document.createElement(tagName);
-  if (classNames) {
-    element.setAttribute('class', classNames);
+  for (var key in options) {
+    switch(key) {
+      case 'className':
+        element.setAttribute('class', options[key]);
+        break;
+      default:
+        break; // do nothing
+    }
   }
   return element;
 }
@@ -26,9 +32,9 @@ var state = {
  * Creates a buy button for the given product.
  */
 var createBuyButton = function(product) {
-  var button = tag('a', 'button is-primary is-small')
-  var icon = tag('span', 'icon');
-  var i = tag('i', 'fa fa-shopping-cart');
+  var button = tag('a', {className: 'button is-primary is-small'})
+  var icon = tag('span', {className: 'icon'});
+  var i = tag('i', {className: 'fa fa-shopping-cart'});
   var text = tag('span');
   text.innerText = 'Buy';
   icon.appendChild(i);
@@ -44,8 +50,7 @@ var createProductRow = function(product) {
   var row = tag('tr');
   var nameCell = tag('td');
   var priceCell = tag('td');
-  var buttonCell = tag('td');
-  buttonCell.setAttribute('class', 'is-icon');
+  var buttonCell = tag('td', {className: 'is-icon'});
 
   nameCell.innerText = product.name;
   priceCell.innerText = product.price;
