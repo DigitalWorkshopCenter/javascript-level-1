@@ -7,7 +7,9 @@ var Catalog = require('./catalog');
  * The overall state of our application.
  */
 var state = {
+  saleMarkupPercentage: 25,
   budget: 1000,
+  profit: 0,
   productList: Catalog.productList(),
   inventory: []
 };
@@ -28,6 +30,61 @@ var tag = function(tagName, options = {}) {
     }
   }
   return element;
+}
+
+
+/**
+ * Close the sale modal by removing the is-active class.
+ */
+var closeSale = function() {
+  var saleModalElement = document.getElementById('saleModal');
+  saleModalElement.className =
+    saleModalElement.className.replace('is-active', '').trim();
+
+  // Make sure we remove the pending sale from our main application state!
+  state.pendingSale = null
+}
+
+
+/**
+ * One-off set up of event handlers for the cancel-sale buttons.
+ */
+var setupCancelSaleButtons = function() {
+  // Attach the close modal event handler to all the elements
+  // with the cancel-sale class.
+  var cancelSaleElements = document.getElementsByClassName('cancel-sale');
+
+  // document.getElementsByClassName returns an HTMLCollection
+  //  See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
+  //
+  // We use a function on Array's prototype to operate on the HTMLCollection
+  // in an array-like manner.
+  Array.prototype.forEach.call(cancelSaleElements, function(elem) {
+    elem.addEventListener('click', closeSale);
+  });
+}
+
+/**
+ * One-off set up of the event handler for the process sale
+ * "Charge it!" button.
+ */
+var setupProcessSaleButton = function(state) {
+  var chargeItElement = document.getElementById('chargeIt');
+
+  var chargeIt = function() {
+    var pendingSale = state.pendingSale;
+    if (pendingSale) {
+      var profit = pendingSale.total - pendingSale.product.price;
+      state.budget += pendingSale.total;
+      state.profit += profit;
+      state.pendingSale = null;
+      state.inventory = removeFromInventory(pendingSale.product);
+      closeSale();
+      display(state);
+    }
+  }
+
+  chargeItElement.addEventListener('click', chargeIt);
 }
 
 
@@ -58,13 +115,44 @@ var buyProduct = function(state, product) {
 
 
 /**
+ * Calculates the total price given the percentage markup and starting price.
+ */
+var calculateTotalPrice = function(percentageMarkup, startingPrice) {
+  return ((percentageMarkup / 100) * startingPrice) + startingPrice;
+}
+
+
+/**
  * Sell the given product. This will alter the main
  * application state appropriately.
+ *
+ * Exercise: enable the customer to buy multiple items
+ * at a time.
  */
-var sellProduct = function(state, product) {
-  alert(`You want to sell ${product.name}`);
+var openSaleWindow = function(state, product) {
+  var saleModalElement  = document.getElementById('saleModal');
+  var saleNameElement   = document.getElementById('saleName');
+  var salePriceElement  = document.getElementById('salePrice');
+  var saleMarkupElement = document.getElementById('saleMarkup');
+  var saleTotalElement  = document.getElementById('saleTotal');
 
-  display(state);
+  var totalPrice =
+    calculateTotalPrice(state.saleMarkupPercentage, product.price);
+
+  // Populate the sale window with details
+  saleNameElement.innerText   = product.name;
+  saleMarkupElement.innerText = `${state.saleMarkupPercentage}%`;
+  salePriceElement.innerText  = `$${product.price}`;
+  saleTotal.innerText         = `$${totalPrice}`;
+
+  // Set the pending sale on the state
+  state.pendingSale = {
+    total: totalPrice,
+    product: product
+  }
+
+  // Show the sale window
+  saleModalElement.className += ' is-active';
 }
 
 
@@ -103,7 +191,7 @@ var createSellButton = function(product) {
   button.appendChild(text);
 
   button.addEventListener('click', function() {
-    sellProduct(state, product);
+    openSaleWindow(state, product);
   });
 
   return button;
@@ -112,6 +200,9 @@ var createSellButton = function(product) {
 
 /**
  * Creates a table row for the given product.
+ *
+ * Exercise: color the row based on the relative product price to create
+ * a heat-map effect.
  */
 var createProductRow = function(product) {
   var row = tag('tr');
@@ -133,6 +224,9 @@ var createProductRow = function(product) {
 
 /**
  * Creates a table row for the given inventory item.
+ *
+ * Exercise: color the row based on the relative inventory count to create
+ * a heat-map effect.
  */
 var createInventoryRow = function(inventoryItem) {
     var row = tag('tr');
@@ -154,11 +248,24 @@ var createInventoryRow = function(inventoryItem) {
 
 /**
  * Displays the current budget.
+ *
+ * Exercise: color the budget based on a threshold to indicate when it's
+ * too low.
  */
 var displayBudget = function(state) {
   var budgetAmount = state.budget;
   var budgetElement = document.getElementById('budget');
   budgetElement.innerText = '$' + budgetAmount;
+};
+
+
+/**
+ * Displays the current profit.
+ */
+var displayProfit = function(state) {
+  var profitAmount = state.profit;
+  var profitElement = document.getElementById('profit');
+  profitElement.innerText = '$' + profitAmount;
 };
 
 
@@ -182,6 +289,27 @@ var displayCatalog = function(state) {
     productsTable.appendChild(row);
   });
 };
+
+
+/**
+ * Return a new inventory with the given product either decremented
+ * or removed entirely if there was only one left.
+ */
+var removeFromInventory = function(product) {
+  var initial = [];
+  var decrement = function(prev, curr) {
+    if (curr.product.id === product.id) {
+      if (curr.quantity > 1) {
+        curr.quantity -= 1;
+        prev = prev.concat(curr);
+      }
+    } else {
+      prev = prev.concat(curr);
+    }
+    return prev;
+  }
+  return state.inventory.reduce(decrement, initial);
+}
 
 
 /**
@@ -246,10 +374,12 @@ var debugState = function(state) {
 var display = function(state) {
   displayBudget(state);
   displayInventoryStatus(state);
+  displayProfit(state);
   displayCatalog(state);
   displayInventory(state);
   debugState(state);
 };
 
-
+setupCancelSaleButtons(state);
+setupProcessSaleButton(state);
 display(state);
