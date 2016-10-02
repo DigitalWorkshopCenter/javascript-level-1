@@ -1,7 +1,17 @@
 require("font-awesome-webpack");
 require('bulma');
 require('../sass/index.sass');
-var Supplier = require('./supplier');
+var Catalog = require('./catalog');
+
+/**
+ * The overall state of our application.
+ */
+var state = {
+  budget: 1000,
+  productList: Catalog.productList(),
+  inventory: []
+};
+
 
 /**
  * Utility function for creating DOM elements.
@@ -20,18 +30,24 @@ var tag = function(tagName, options = {}) {
   return element;
 }
 
-/**
- * The overall state of our application.
- */
-var state = {
-  budget: 1000,
-  productList: Supplier.productList(),
-  inventory: []
-};
 
+/**
+ * Sell the given product. This will alter the main
+ * application state appropriately.
+ *
+ * Exercise: prevent buying more inventory if the current inventory status
+ * is TOO HIGH.
+ */
 var buyProduct = function(state, product) {
+  var inventory = state.inventory;
+
   if (state.budget >= product.price) {
-    state.inventory = state.inventory.concat(product);
+    var existingInventory = inventory.find(x => x.product.id === product.id);
+    if (existingInventory) {
+      existingInventory.quantity += 1;
+    } else {
+      inventory.push({product: product, quantity: 1});
+    }
     state.budget -= product.price;
   } else {
     alert(`You cannot afford to buy ${product.name}`);
@@ -39,6 +55,18 @@ var buyProduct = function(state, product) {
 
   display(state);
 }
+
+
+/**
+ * Sell the given product. This will alter the main
+ * application state appropriately.
+ */
+var sellProduct = function(state, product) {
+  alert(`You want to sell ${product.name}`);
+
+  display(state);
+}
+
 
 /**
  * Creates a buy button for the given product.
@@ -61,6 +89,9 @@ var createBuyButton = function(product) {
 };
 
 
+/**
+ * Creates a sell button for the given product.
+ */
 var createSellButton = function(product) {
   var button = tag('a', {className: 'button is-primary is-small'})
   var icon = tag('span', {className: 'icon'});
@@ -72,7 +103,7 @@ var createSellButton = function(product) {
   button.appendChild(text);
 
   button.addEventListener('click', function() {
-    alert(`You want to sell ${product.name}`);
+    sellProduct(state, product);
   });
 
   return button;
@@ -99,15 +130,19 @@ var createProductRow = function(product) {
   return row;
 };
 
-var createInventoryRow = function(inventoryCount) {
+
+/**
+ * Creates a table row for the given inventory item.
+ */
+var createInventoryRow = function(inventoryItem) {
     var row = tag('tr');
     var nameCell = tag('td');
     var quantityCell = tag('td');
     var buttonCell = tag('td', {className: 'is-icon'});
 
-    nameCell.innerText = inventoryCount.product.name;
-    quantityCell.innerText = inventoryCount.quantity;
-    buttonCell.appendChild(createSellButton(inventoryCount.product));
+    nameCell.innerText = inventoryItem.product.name;
+    quantityCell.innerText = inventoryItem.quantity;
+    buttonCell.appendChild(createSellButton(inventoryItem.product));
 
     row.appendChild(nameCell);
     row.appendChild(quantityCell);
@@ -115,6 +150,7 @@ var createInventoryRow = function(inventoryCount) {
 
     return row;
 }
+
 
 /**
  * Displays the current budget.
@@ -124,6 +160,7 @@ var displayBudget = function(state) {
   var budgetElement = document.getElementById('budget');
   budgetElement.innerText = '$' + budgetAmount;
 };
+
 
 /**
  * Displays the products available in the supplier catalog.
@@ -148,23 +185,22 @@ var displayCatalog = function(state) {
 
 
 /**
- * Counts the number of each type of product we have in our inventory.
+ * Our simple inventory rules:
+ * - EMPTY: no items
+ * - LOW: less than three items (either of a single type or across multiple types)
+ * - HIGH: more than 6 of any one item
+ * - OK: neither of the above are true
  */
-var countInventory = function(inventory) {
-  var initialCounts = [];
-  var counter = function(prevCounts, currentProduct) {
-    var arrayIndex = currentProduct.id -1;
-    if (prevCounts[arrayIndex]) {
-      prevCounts[arrayIndex].quantity += 1;
-    } else {
-      prevCounts[arrayIndex] = {
-        product: currentProduct,
-        quantity: 1
-      };
-    }
-    return prevCounts;
+var calculateInventoryStatus = function(inventory) {
+  if (inventory.length === 0) {
+    return 'EMPTY';
+  } else if (3 > inventory.reduce(((prev, curr) => prev + curr.quantity), 0)) {
+    return 'TOO LOW';
+  } else if (inventory.some(x => x.quantity > 6)) {
+    return 'TOO HIGH';
+  } else {
+    return 'OK';
   }
-  return inventory.reduce(counter, initialCounts);
 }
 
 
@@ -173,14 +209,12 @@ var countInventory = function(inventory) {
  */
 var displayInventory = function(state) {
   var inventory = state.inventory;
-  var inventoryCounts = countInventory(inventory);
-  console.log('inventory counts', inventoryCounts);
 
   // Create an HTML table row for each product
-  var inventoryRows = inventoryCounts.map(createInventoryRow);
+  var inventoryRows = inventory.map(createInventoryRow);
 
   // Remove existing rows
-  var inventoryTable = document.getElementById("inventoryTable");
+  var inventoryTable = document.getElementById('inventoryTable');
   while (inventoryTable.firstChild) {
     inventoryTable.removeChild(inventoryTable.firstChild);
   };
@@ -191,10 +225,30 @@ var displayInventory = function(state) {
   });
 }
 
+
+/**
+ * Displays the current inventory status.
+ * Exercise: style the status to be "red if too low or high
+ */
+var displayInventoryStatus = function(state) {
+  var inventoryStatus = calculateInventoryStatus(state.inventory);
+  var inventoryStatusElement = document.getElementById('inventoryStatus');
+  inventoryStatusElement.innerText = inventoryStatus;
+}
+
+
+var debugState = function(state) {
+  var stateElement = document.getElementById('debugState');
+  stateElement.innerText = JSON.stringify(state);
+}
+
+
 var display = function(state) {
   displayBudget(state);
+  displayInventoryStatus(state);
   displayCatalog(state);
   displayInventory(state);
+  debugState(state);
 };
 
 
