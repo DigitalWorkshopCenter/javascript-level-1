@@ -66,6 +66,7 @@ var setupCancelSaleButtons = function() {
   });
 }
 
+
 /**
  * One-off set up of the event handler for the process sale
  * "Charge it!" button.
@@ -369,7 +370,7 @@ var displayInventory = function(state) {
   var inventoryTable = document.getElementById('inventoryTable');
   while (inventoryTable.firstChild) {
     inventoryTable.removeChild(inventoryTable.firstChild);
-  };
+  }
 
   // Add the new rows
   inventoryRows.forEach(function(row) {
@@ -388,6 +389,7 @@ var displayInventoryStatus = function(state) {
   inventoryStatusElement.innerText = inventoryStatus;
 }
 
+
 var displaySales = function(state) {
   var sales = state.sales;
   var salesRows = sales.map(createSaleRow);
@@ -405,12 +407,18 @@ var displaySales = function(state) {
 }
 
 
+/**
+ * Pretty print the state tree to the screen.
+ */
 var debugState = function(state) {
   var stateElement = document.getElementById('debugState');
   stateElement.innerText = JSON.stringify(state, null, '  ');
 }
 
 
+/**
+ * Display the UI components based on the current state.
+ */
 var display = function(state) {
   displayBudget(state);
   displayInventoryStatus(state);
@@ -420,6 +428,7 @@ var display = function(state) {
   displaySales(state);
   debugState(state);
 };
+
 
 setupCancelSaleButtons(state);
 setupProcessSaleButton(state);
