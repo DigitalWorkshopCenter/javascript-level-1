@@ -11,7 +11,8 @@ var state = {
   budget: 1000,
   profit: 0,
   productList: Catalog.productList(),
-  inventory: []
+  inventory: [],
+  sales: []
 };
 
 
@@ -79,6 +80,8 @@ var setupProcessSaleButton = function(state) {
       state.profit += profit;
       state.pendingSale = null;
       state.inventory = removeFromInventory(pendingSale.product);
+      state.sales.push(pendingSale);
+
       closeSale();
       display(state);
     }
@@ -246,6 +249,25 @@ var createInventoryRow = function(inventoryItem) {
 }
 
 
+var createSaleRow = function(sale) {
+  var row = tag('tr');
+  var nameCell = tag('td');
+  var saleCell = tag('td');
+  var profitCell = tag('td');
+  var buttonCell = tag('td', {className: 'is-icon'});
+
+  nameCell.innerText = sale.product.name;
+  saleCell.innerText = `$${sale.total}`;
+  profitCell.innerText = `$${sale.total - sale.product.price}`;
+
+  row.appendChild(nameCell);
+  row.appendChild(saleCell);
+  row.appendChild(profitCell);
+
+  return row;
+}
+
+
 /**
  * Displays the current budget.
  *
@@ -364,6 +386,22 @@ var displayInventoryStatus = function(state) {
   inventoryStatusElement.innerText = inventoryStatus;
 }
 
+var displaySales = function(state) {
+  var sales = state.sales;
+  var salesRows = sales.map(createSaleRow);
+
+  // Remove existing rows
+  var salesTable = document.getElementById('salesTable');
+  while (salesTable.firstChild) {
+    salesTable.removeChild(salesTable.firstChild);
+  };
+
+  // Add the new rows
+  salesRows.forEach(function(row) {
+    salesTable.appendChild(row);
+  });
+}
+
 
 var debugState = function(state) {
   var stateElement = document.getElementById('debugState');
@@ -377,6 +415,7 @@ var display = function(state) {
   displayProfit(state);
   displayCatalog(state);
   displayInventory(state);
+  displaySales(state);
   debugState(state);
 };
 
