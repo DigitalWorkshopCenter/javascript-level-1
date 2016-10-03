@@ -44,6 +44,7 @@ var closeSale = function() {
 
   // Make sure we remove the pending sale from our main application state!
   state.pendingSale = null
+  display(state);
 }
 
 
@@ -156,6 +157,7 @@ var openSaleWindow = function(state, product) {
 
   // Show the sale window
   saleModalElement.className += ' is-active';
+  display(state);
 }
 
 
@@ -405,7 +407,7 @@ var displaySales = function(state) {
 
 var debugState = function(state) {
   var stateElement = document.getElementById('debugState');
-  stateElement.innerText = JSON.stringify(state);
+  stateElement.innerText = JSON.stringify(state, null, '  ');
 }
 
 
