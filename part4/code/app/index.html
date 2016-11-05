@@ -69,7 +69,14 @@
       <div class="columns">
         <div class="column is-one-third">
           <div class="box">
-            <p class="title is-3">Catalog</p>
+            <p class="title is-3">Catalog
+              <a id="newCatalogItemButton" class="button is-light is-small is-pulled-right">
+                <span class="icon is-small">
+                  <i class="fa fa-plus"></i>
+                </span>
+                <span>New</span>
+              </a>
+            </p>
             <p class="subtitle is-5">Buy products for your store.</p>
             <table class="table">
               <thead>
@@ -85,7 +92,7 @@
                   <td>$25</td>
                   <td class="is-icon">
                     <a class="button is-primary is-small">
-                      <span class="icon">
+                      <span class="icon is-small">
                         <i class="fa fa-shopping-cart"></i>
                       </span>
                       <span>Buy</span>
@@ -232,6 +239,44 @@
         </div>
       </div>
     </section>
+
+
+    <!--
+    The new catalog item modal. This will become visible when the 'is-active'
+    class is applied.
+    -->
+    <div id="newCatalogItemModal" class="modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">New Catalog Item</p>
+          <button class="delete cancel-new-catalog-item"></button>
+        </header>
+        <section class="modal-card-body">
+          <div class="content">
+
+            <label class="label">Name</label>
+            <p class="control has-icon has-icon-right">
+              <input id="newItemName" class="input" type="text" placeholder="Name (e.g. Gloves)">
+            </p>
+            <label class="label">Price</label>
+            <p class="control has-addons">
+              <a class="button is-disabled is-outlined">
+                <span class="icon is-small"><i class="fa fa-usd"></i></span>
+              </a>
+              <input id="newItemPrice" class="input" type="number" placeholder="Price (e.g. 25)">
+            </p>
+
+          </div>
+        </section>
+        <footer class="modal-card-foot">
+          <a id="addToCatalog" class="button is-success is-large">Add to Catalog</a>
+          <a class="button cancel-new-catalog-item is-link">Cancel</a>
+        </footer>
+      </div>
+    </div>
+
+
     <!--
     The sales modal. This will become visible when the 'is-active' class
     is applied.
@@ -279,6 +324,7 @@
         </footer>
       </div>
     </div>
+
     <footer class="footer">
       <div class="container">
         <div class="content has-text-centered">

@@ -38,13 +38,65 @@ var tag = function(tagName, options = {}) {
  * Close the sale modal by removing the is-active class.
  */
 var closeSale = function() {
-  var saleModalElement = document.getElementById('saleModal');
-  saleModalElement.className =
-    saleModalElement.className.replace('is-active', '').trim();
+  var saleModal = document.getElementById('saleModal');
+  saleModal.className =
+    saleModal.className
+      .replace('is-active', '')
+      .trim();
 
   // Make sure we remove the pending sale from our main application state!
   state.pendingSale = null
   display(state);
+}
+
+
+/**
+ * Close the new catalog item modal by removing the is-active class.
+ */
+var closeNewCatalogItem = function() {
+  var saleModal = document.getElementById('newCatalogItemModal');
+  saleModal.className =
+    saleModal.className
+      .replace('is-active', '')
+      .trim();
+}
+
+
+/**
+ * Show the new catalog item form.
+ */
+var newCatalogItem = function() {
+  var newCatalogItemModal = document.getElementById('newCatalogItemModal');
+  newCatalogItemModal.className += ' is-active';
+}
+
+
+/**
+ * One-off set up of event handler for the newCatalogItemButton.
+ */
+var setupNewCatalogItemButton = function() {
+  var newCatalogItemButton = document.getElementById('newCatalogItemButton');
+  newCatalogItemButton.addEventListener('click', newCatalogItem);
+}
+
+
+/**
+ * One-off set up of event handlers for the cancel-new-catalog-item buttons.
+ */
+var setupCloseNewCatalogItemButton = function() {
+  // Attach the close modal event handler to all the elements
+  // with the cancel-sale class.
+  var cancelNewCatalogItemElements =
+    document.getElementsByClassName('cancel-new-catalog-item');
+
+  // document.getElementsByClassName returns an HTMLCollection
+  //  See: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection
+  //
+  // We use a function on Array's prototype to operate on the HTMLCollection
+  // in an array-like manner.
+  Array.prototype.forEach.call(cancelNewCatalogItemElements, function(elem) {
+    elem.addEventListener('click', closeNewCatalogItem);
+  });
 }
 
 
@@ -64,6 +116,111 @@ var setupCancelSaleButtons = function() {
   Array.prototype.forEach.call(cancelSaleElements, function(elem) {
     elem.addEventListener('click', closeSale);
   });
+}
+
+
+var validateNewItemName = function() {
+  var newItemNameInput = document.getElementById('newItemName');
+  var newItemValue = newItemNameInput.value;
+  var isValid;
+  if (newItemValue.length < 3) {
+    isValid = false;
+    newItemNameInput.className =
+      newItemNameInput.className
+        .replace('is-success', '')
+        .trim();
+    newItemNameInput.className += ' is-danger';
+  } else {
+    isValid = true;
+    newItemNameInput.className =
+      newItemNameInput.className
+        .replace('is-danger', '')
+        .trim();
+    newItemNameInput.className += ' is-success';
+  }
+  return isValid;
+}
+
+
+var validateNewItemPrice = function() {
+  var newItemPriceInput = document.getElementById('newItemPrice');
+  var newItemValue = newItemPriceInput.value;
+  var isValid;
+  if (newItemValue < 1) {
+    isValid = false;
+    newItemPriceInput.className =
+      newItemPriceInput.className
+        .replace('is-success', '')
+        .trim();
+    newItemPriceInput.className += ' is-danger';
+  } else {
+    isValid = true;
+    newItemPriceInput.className =
+      newItemPriceInput.className
+        .replace('is-danger', '')
+        .trim();
+    newItemPriceInput.className += ' is-success';
+  }
+  return isValid;
+}
+
+
+/**
+ *
+ */
+var validateNewCatalogItemForm = function() {
+  var nameIsValid = validateNewItemName();
+  var priceIsValid = validateNewItemPrice();
+
+  var allFieldsAreValid =
+    nameIsValid &&
+    priceIsValid;
+
+  return allFieldsAreValid;
+}
+
+
+var nextProductId = function(state) {
+  var reducer = function(prev, curr, index, arr) {
+    if (curr.id > prev) {
+      return curr.id;
+    } else {
+      return prev;
+    }
+  }
+  var startWith = 1;
+  var highestId = state.productList.reduce(reducer, startWith);
+  var nextId = highestId + 1;
+  return nextId;
+}
+
+
+/**
+ * Validates the new catalog item form and adds a new item to the catalog.
+ */
+var addToCatalog = function() {
+  if (validateNewCatalogItemForm()) {
+    // Create a new item from the form
+    var newItemNameInput = document.getElementById('newItemName');
+    var newItemPriceInput = document.getElementById('newItemPrice');
+    var newItem = {
+      id: nextProductId(state),
+      name: newItemNameInput.value,
+      price: parseInt(newItemPriceInput.value)
+    }
+    state.productList.push(newItem);
+    closeNewCatalogItem();
+    display(state);
+  }
+}
+
+/**
+ * Validate the new catalog item form and add to the catalog if valid.
+ * Display an error message if invalid.
+ */
+var setupProcessNewCatalogItemButton = function() {
+  var addToCatalogButton = document.getElementById('addToCatalog');
+  addToCatalogButton.addEventListener('click', addToCatalog);
 }
 
 
@@ -120,10 +277,12 @@ var buyProduct = function(state, product) {
 
 
 /**
- * Calculates the total price given the percentage markup and starting price.
+ * Calculates the total price given the percentage profit and starting price.
  */
-var calculateTotalPrice = function(percentageMarkup, startingPrice) {
-  return ((percentageMarkup / 100) * startingPrice) + startingPrice;
+var calculateTotalPrice = function(percentageProfit, startingPrice) {
+  var profit = (percentageProfit / 100) * startingPrice;
+  var total = profit + startingPrice;
+  return total;
 }
 
 
@@ -166,7 +325,7 @@ var openSaleWindow = function(state, product) {
  * Creates a buy button for the given product.
  */
 var createBuyButton = function(product) {
-  var button = tag('a', {className: 'button is-primary is-small'})
+  var button = tag('a', {className: 'button is-primary is-small'});
   var icon = tag('span', {className: 'icon'});
   var i = tag('i', {className: 'fa fa-shopping-cart'});
   var text = tag('span');
@@ -429,7 +588,9 @@ var display = function(state) {
   debugState(state);
 };
 
-
+setupNewCatalogItemButton();
+setupProcessNewCatalogItemButton();
+setupCloseNewCatalogItemButton();
 setupCancelSaleButtons(state);
 setupProcessSaleButton(state);
 display(state);
