@@ -49,6 +49,22 @@ Welcome to JavaScript Level 1 with the Digital Workshop Center. Please start by 
 - Control Flow
   - if / else
 
+### Further Reading
+
+
+### Homework
+
+#### Greeter Program
+- Write a program which prompts the user for their name.
+  - If they user enters nothing, then prompt them again with more specific instructions.
+  - When the user finally enters their name, then display a personalized greeting in a pop-up Window.
+
+#### Drinking Game
+- write a program that prompts the user for their age
+  - if the user is over 21 then show a message that offers the user an alcoholic drink
+  - if the user is under 21 then show a message that offers the user a non-alcoholic drink
+
+
 ## Part 2
 
 - Control Flow (cont...)
@@ -109,6 +125,25 @@ Welcome to JavaScript Level 1 with the Digital Workshop Center. Please start by 
   - functions as values
   - declarations, expressions, and hoisting
 
+### Further Reading
+
+
+### Homework
+
+- Create a data structure for a catalog of products
+  - each product in the catalog should have id, name, and price properties
+- Create functions for adding items to the catalog
+- Write a program that uses window.prompt to ask the user for:
+  - a new product name
+  - a new product price
+- ...then create a new inventory item from the users' answers
+- validate their answers to ensure that:
+  - the name is at least 3 characters long
+  - the price is greater than zero
+- Create functions for calculating the total value of the items in the catalog
+  - try this with loops
+  - also try this with Array.prototype.reduce
+
 ## Part 3
 
 - The DOM
@@ -156,6 +191,13 @@ Welcome to JavaScript Level 1 with the Digital Workshop Center. Please start by 
     - Events: submit, reset
     - getting / setting values
     - validation
+
+### Homework
+
+- Create a form that allows users to create inventory items
+- Use the data structure from last weeks' homework to built a product catalog
+- Use the DOM API to display the items in the catalog in an HTML table
+- add event handlers to each item in the list which deletes the item form the product catalog
 
 ## Part 4
 
