@@ -10,7 +10,7 @@ var state = {
   saleMarkupPercentage: 25,
   budget: 1000,
   profit: 0,
-  productList: Catalog.productList(),
+  productList: [],
   inventory: [],
   sales: []
 };
@@ -59,6 +59,10 @@ var closeNewCatalogItem = function() {
     saleModal.className
       .replace('is-active', '')
       .trim();
+
+  // Reset the form
+  document.getElementById('newItemName').value = '';
+  document.getElementById('newItemPrice').value = '';
 }
 
 
