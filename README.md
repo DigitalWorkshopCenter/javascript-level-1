@@ -11,7 +11,7 @@ Welcome to JavaScript Level 1 with the Digital Workshop Center.
 
 ## Class 1
 
-   [Slides](class1/README.md).
+   [Slides](https://digitalworkshopcenter.github.io/javascript-level-1/class1/slides.html)
 
 ## Class 2
 
